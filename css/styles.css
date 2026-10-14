@@ -653,6 +653,17 @@ a {
   background: var(--forest-light);
 }
 
+.form-feedback {
+  margin: 0;
+  color: var(--forest);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.form-feedback:empty {
+  display: none;
+}
+
 .site-footer {
   color: rgb(255 254 250 / 80%);
   background: #122f29;

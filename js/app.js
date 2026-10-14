@@ -1,4 +1,4 @@
-const sampleItems = [
+const items = [
 	{
 		name: "Black Wallet",
 		status: "Lost",
@@ -31,6 +31,14 @@ const sampleItems = [
 
 const itemGrid = document.querySelector("#item-grid");
 const itemSearch = document.querySelector("#item-search");
+const statusFilterButtons = document.querySelectorAll("[data-status-filter]");
+const reportForm = document.querySelector(".report-form");
+const itemNameInput = document.querySelector("#item-name");
+const itemStatusInput = document.querySelector("#item-status");
+const itemLocationInput = document.querySelector("#item-location");
+const itemDateInput = document.querySelector("#item-date");
+const itemImageInput = document.querySelector("#item-image");
+const reportFeedback = document.querySelector("#report-feedback");
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
 	month: "short",
 	day: "numeric",
@@ -42,11 +50,85 @@ function filterItemsByName(items, searchText) {
 	return items.filter((item) => item.name.toLowerCase().includes(normalizedSearchText));
 }
 
-function handleSearchInput() {
-	renderItems(filterItemsByName(sampleItems, itemSearch.value));
+function filterItemsByStatus(items, statusFilter) {
+	if (statusFilter === "all") {
+		return items;
+	}
+
+	return items.filter((item) => item.status.toLowerCase() === statusFilter);
 }
 
-function renderItems(itemsToRender = sampleItems) {
+let selectedStatusFilter = "all";
+
+function updateVisibleItems() {
+	const nameMatches = filterItemsByName(items, itemSearch.value);
+	renderItems(filterItemsByStatus(nameMatches, selectedStatusFilter));
+}
+
+function readItemForm() {
+	return {
+		name: itemNameInput.value,
+		status: itemStatusInput.value,
+		location: itemLocationInput.value,
+		date: itemDateInput.value,
+		image: itemImageInput.files[0],
+	};
+}
+
+function validateStatusInput() {
+	const validStatus = !itemStatusInput.value || ["Lost", "Found"].includes(itemStatusInput.value);
+	itemStatusInput.setCustomValidity(validStatus ? "" : "Choose Lost or Found.");
+}
+
+function validateImageInput() {
+	const selectedImage = itemImageInput.files[0];
+	const validImage = !selectedImage || selectedImage.type.startsWith("image/");
+	itemImageInput.setCustomValidity(validImage ? "" : "Choose an image file.");
+}
+
+function validateItemForm() {
+	validateStatusInput();
+	validateImageInput();
+	return reportForm.reportValidity();
+}
+
+function createItem(formData) {
+	return {
+		name: formData.name,
+		status: formData.status,
+		location: formData.location,
+		date: formData.date,
+		image: URL.createObjectURL(formData.image),
+	};
+}
+
+function handleReportSubmit(event) {
+	event.preventDefault();
+	reportFeedback.textContent = "";
+
+	if (!validateItemForm()) {
+		return;
+	}
+
+	items.push(createItem(readItemForm()));
+	updateVisibleItems();
+	reportForm.reset();
+	reportFeedback.textContent = "Your item was reported successfully.";
+}
+
+function handleStatusFilterClick(event) {
+	selectedStatusFilter = event.currentTarget.dataset.statusFilter;
+
+	statusFilterButtons.forEach((button) => {
+		const isSelected = button === event.currentTarget;
+		button.classList.toggle("is-selected", isSelected);
+		button.setAttribute("aria-pressed", String(isSelected));
+	});
+
+	updateVisibleItems();
+}
+
+function renderItems(itemsToRender = items) {
 	const itemCards = itemsToRender.map((item) => {
 		const card = document.createElement("article");
 		card.className = "item-card";
@@ -100,5 +182,11 @@ function renderItems(itemsToRender = sampleItems) {
 	itemGrid.replaceChildren(...itemCards);
 }
 
-renderItems();
-itemSearch.addEventListener("input", handleSearchInput);
+updateVisibleItems();
+itemSearch.addEventListener("input", updateVisibleItems);
+statusFilterButtons.forEach((button) => {
+	button.addEventListener("click", handleStatusFilterClick);
+});
+reportForm.addEventListener("submit", handleReportSubmit);
+itemStatusInput.addEventListener("change", validateStatusInput);
+itemImageInput.addEventListener("change", validateImageInput);

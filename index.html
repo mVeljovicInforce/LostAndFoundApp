@@ -63,9 +63,9 @@
           <input id="item-search" name="search" type="search" placeholder="Search by item name" autocomplete="off">
         </div>
         <div class="filter-controls" role="group" aria-label="Filter items by status">
-          <button class="filter-button is-selected" type="button" aria-pressed="true">All</button>
-          <button class="filter-button" type="button" aria-pressed="false">Lost</button>
-          <button class="filter-button" type="button" aria-pressed="false">Found</button>
+          <button class="filter-button is-selected" type="button" data-status-filter="all" aria-pressed="true">All</button>
+          <button class="filter-button" type="button" data-status-filter="lost" aria-pressed="false">Lost</button>
+          <button class="filter-button" type="button" data-status-filter="found" aria-pressed="false">Found</button>
         </div>
       </div>
 
@@ -84,34 +84,35 @@
           <div class="form-row">
             <div class="form-field">
               <label for="item-name">Item name</label>
-              <input id="item-name" name="item-name" type="text" placeholder="e.g. Blue water bottle">
+              <input id="item-name" name="item-name" type="text" placeholder="e.g. Blue water bottle" required>
             </div>
             <div class="form-field">
               <label for="item-status">Status</label>
-              <select id="item-status" name="item-status">
+              <select id="item-status" name="item-status" required>
                 <option value="" selected disabled>Choose one</option>
-                <option value="lost">Lost</option>
-                <option value="found">Found</option>
+                <option value="Lost">Lost</option>
+                <option value="Found">Found</option>
               </select>
             </div>
           </div>
           <div class="form-row">
             <div class="form-field">
               <label for="item-location">Location</label>
-              <input id="item-location" name="item-location" type="text" placeholder="Where was it lost or found?">
+              <input id="item-location" name="item-location" type="text" placeholder="Where was it lost or found?" required>
             </div>
             <div class="form-field">
               <label for="item-date">Date</label>
-              <input id="item-date" name="item-date" type="date">
+              <input id="item-date" name="item-date" type="date" required>
             </div>
           </div>
           <div class="form-row form-row-submit">
             <div class="form-field">
               <label for="item-image">Image</label>
-              <input id="item-image" name="item-image" type="file" accept="image/*">
+              <input id="item-image" name="item-image" type="file" accept="image/*" required>
             </div>
-            <button class="button button-submit" type="button">Continue <span aria-hidden="true">&#8594;</span></button>
+            <button class="button button-submit" type="submit">Report item <span aria-hidden="true">&#8594;</span></button>
           </div>
+          <p class="form-feedback" id="report-feedback" role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>

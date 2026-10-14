@@ -5,6 +5,7 @@ const items = [
 		location: "West Garden",
 		date: "2026-10-09",
 		image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80",
+		isSample: true,
 	},
 	{
 		name: "Everyday backpack",
@@ -12,6 +13,7 @@ const items = [
 		location: "Maple Library",
 		date: "2026-10-12",
 		image: "https://images.unsplash.com/photo-1622560480654-d96214fdc887?auto=format&fit=crop&w=800&q=80",
+		isSample: true,
 	},
 	{
 		name: "Black headphones",
@@ -19,6 +21,7 @@ const items = [
 		location: "North Hall",
 		date: "2026-10-11",
 		image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+		isSample: true,
 	},
 	{
 		name: "Compact camera",
@@ -26,6 +29,7 @@ const items = [
 		location: "Cedar Park",
 		date: "2026-10-10",
 		image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
+		isSample: true,
 	},
 ];
 
@@ -99,6 +103,7 @@ function createItem(formData) {
 		location: formData.location,
 		date: formData.date,
 		image: URL.createObjectURL(formData.image),
+		isSample: false,
 	};
 }
 
@@ -160,7 +165,10 @@ function renderItems(itemsToRender = items) {
 		const sampleMarker = document.createElement("span");
 		sampleMarker.className = "sample-marker";
 		sampleMarker.textContent = "Sample";
-		titleRow.append(title, sampleMarker);
+		titleRow.append(title);
+		if (item.isSample) {
+			titleRow.append(sampleMarker);
+		}
 
 		const location = document.createElement("p");
 		location.className = "item-location";
